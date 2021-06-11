@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+ArchRlogs/
+ArchR_tutorial_files/
+QualityControl
+*.arrow
+*.rds
+*.log
