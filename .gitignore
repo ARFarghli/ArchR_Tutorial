@@ -9,3 +9,8 @@ QualityControl
 *.arrow
 *.rds
 *.log
+Save*
+HemeFragments/
+ArchR_Tutorial/
+ArchR_tutorial_cache/
+HemeTutorial/
