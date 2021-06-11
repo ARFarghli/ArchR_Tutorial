@@ -831,7 +831,11 @@ ArchR has their own proprietary, fixed width, peak calling method. Other methods
 ArchR looks for Macs2 for for peak calling. If it cannot find it, add it using the following code
 
 ```{r Path to Mac2}
-# pathToMacs2 <- findMacs2()
+old_path <- Sys.getenv("PATH")
+macs2path <- "/home/af547/.local/bin"
+Sys.setenv(PATH = paste(macs2path, old_path, sep = ":"))
+
+pathToMacs2 <- findMacs2()
 ```
 
 Now we can begin to generate a merged peak set with ArchR using `addReproduciblePeakSet()`. There are many other parameters we can play around with, so be sure to look through them with `~?addReproduciblePeakSet`.
@@ -844,7 +848,7 @@ addArchRThreads(threads = 1)
 projHeme4 <- addReproduciblePeakSet(
     ArchRProj = projHeme4, 
     groupBy = "Clusters2", 
-    pathToMacs2 = "/programs/macs2-2.2.7.1/bin/macs2"
+    pathToMacs2 = pathToMacs2
 )
 ```
 
