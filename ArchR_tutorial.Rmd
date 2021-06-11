@@ -22,7 +22,7 @@ set.seed(1)
 
 ```{r set threads, message = F, warning = F}
 #set threads specific to your machine
-addArchRThreads(threads = 40) 
+addArchRThreads(threads = 24) 
 ```
 
 We need a reference genome for downstream analyses. ArchR natively supports hg19, hg38, mm9, and mm10.
@@ -32,9 +32,13 @@ https://jeffgranja.s3.amazonaws.com/ArchR/TestData/HemeFragments/scATAC_CD34_BMM
 https://jeffgranja.s3.amazonaws.com/ArchR/TestData/HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz
 Content type 'application/x-gzip' length 132168697 bytes (126.0 MB)
 ```{r download tutorial data and add genome}
+#inputFiles <- getTutorialData(tutorial = "hematopoiesis")
+# inputFiles <- getTutorialData(tutorial = "hematopoiesis")
+
 inputFiles <- c("HemeFragments/scATAC_BMMC_R1.fragments.tsv.gz","HemeFragments/scATAC_CD34_BMMC_R1.fragments.tsv.gz", "HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz")
-inputFiles <- getTutorialData(tutorial = "hematopoiesis")
+
 inputFiles
+
 addArchRGenome(genome = "hg19", install = FALSE)
 ```
 ### Creating Arrow Files
@@ -653,6 +657,7 @@ projHeme3 <- addGeneIntegrationMatrix(
     nameScore = "predictedScore"
 )
 ```
+This took almost ~30min to run
 
 GeneIntegrationMatrix should now be available to us
 ```{r Check projHeme3 matrices}
@@ -815,18 +820,18 @@ We do this by grouping together single-cells derived from cell cluster or supers
 
 We will group cells from clusters, and we will used clusters defined by scRNA-seq integration in the last step. 
 **NOTE: This grouping is not available if you did not integrate your across libraries. An alternative grouping will need to be used**
-```{r Generate psuedo bulk libraries}
+```{r Generate psuedo bulk libraries, message = FALSE}
 projHeme4 <- addGroupCoverages(ArchRProj = projHeme3, groupBy = "Clusters2")
 ```
 
 ### Calling bulk replicate peaks with ArchR
 
-ArchR has their own proprietary, fixed widt, hpeak calling method. Other methods of peak calling include bedtools merge, bedtools cluster. They both have their own short comings that are resolved by the ArchR iterative overlap approach. You can also add in your own peak set. Read more [here](https://www.archrproject.com/bookdown/the-iterative-overlap-peak-merging-procedure.html)
+ArchR has their own proprietary, fixed width, peak calling method. Other methods of peak calling include bedtools merge, bedtools cluster. They both have their own short comings that are resolved by the ArchR iterative overlap approach. You can also add in your own peak set. Read more [here](https://www.archrproject.com/bookdown/the-iterative-overlap-peak-merging-procedure.html)
 
-ArchR looks for Macs2 for for peak calling. If it cannt find it, add it using the following code
+ArchR looks for Macs2 for for peak calling. If it cannot find it, add it using the following code
 
 ```{r Path to Mac2}
-pathToMacs2 <- findMacs2()
+# pathToMacs2 <- findMacs2()
 ```
 
 Now we can begin to generate a merged peak set with ArchR using `addReproduciblePeakSet()`. There are many other parameters we can play around with, so be sure to look through them with `~?addReproduciblePeakSet`.
@@ -834,11 +839,12 @@ Now we can begin to generate a merged peak set with ArchR using `addReproducible
 
 #### Peak calling with Macs2
 
-```{r}
+```{r MACS2 Psuedo-bulk Peak Calling}
+addArchRThreads(threads = 1)
 projHeme4 <- addReproduciblePeakSet(
     ArchRProj = projHeme4, 
     groupBy = "Clusters2", 
-    pathToMacs2 = pathToMacs2
+    pathToMacs2 = "/programs/macs2-2.2.7.1/bin/macs2"
 )
 ```
 
