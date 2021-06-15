@@ -17,7 +17,6 @@ ArchR::installExtraPackages()
 ```{r install and load libraries, echo = F, message = F, warning = F}
 library(ArchR)
 library(knitr)
-set.seed(1)
 ```
 
 ```{r set threads, message = F, warning = F}
@@ -862,7 +861,7 @@ getPeakSet(projHeme4)
 
 We can call peaks with the native ArchR approach. ArchR recommends using Macs2 unless absolutely necessary. We will go through how to use this native ArchR peak caller, and how to compare the two approaches
 
-To use the native peak caller, we set the paramter `method` to `p`.
+To use the native peak caller, we set the parameter `method` to `p`.
 ```{r ArchR native peak caller}
 projHemeTmp <- addReproduciblePeakSet(
     ArchRProj = projHeme4, 
